@@ -111,6 +111,11 @@
     <Compile Include="Authentication\SessionManager.cs" />
     <Compile Include="Internal\UriProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wiki\InfoCollection.cs" />
+    <Compile Include="Wiki\InfoRecord.cs" />
+    <Compile Include="Wiki\Mono.cs" />
+    <Compile Include="Wiki\Subject.cs" />
+    <Compile Include="Wiki\Topic.cs" />
     <EmbeddedResource Include="Properties\Bangumi.Client.rd.xml" />
   </ItemGroup>
   <ItemGroup>
