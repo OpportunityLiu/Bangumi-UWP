@@ -1,0 +1,17 @@
+﻿<Page x:Class="Bangumi.UWP.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Bangumi.UWP"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+  <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <TextBox x:Name="tbMail" />
+    <PasswordBox x:Name="pbPass" />
+    <Image x:Name="imgCaptcha" Height="100" MinWidth="100" PointerReleased="imgCaptcha_PointerReleased"/>
+    <TextBox x:Name="tbCaptcha" />
+    <Button Click="Button_Click">Log on</Button>
+    <TextBlock x:Name="tbInfo" />
+  </StackPanel>
+</Page>
