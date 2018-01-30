@@ -132,6 +132,9 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.6</Version>
     </PackageReference>
+    <PackageReference Include="Opportunity.MvvmUniverse">
+      <Version>1.2.3</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bangumi.Client\Bangumi.Client.csproj">

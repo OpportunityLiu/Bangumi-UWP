@@ -1,4 +1,5 @@
-﻿using Opportunity.MvvmUniverse;
+﻿using HtmlAgilityPack;
+using Opportunity.MvvmUniverse;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -12,5 +12,7 @@ namespace Bangumi.Client.Wiki
         protected Subject(long id) : base(id)
         {
         }
+
+        public override Uri Uri => throw new NotImplementedException();
     }
 }

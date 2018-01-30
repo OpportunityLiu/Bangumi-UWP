@@ -1,9 +1,11 @@
 ﻿using Opportunity.MvvmUniverse;
 using System;
+using Bangumi.Client.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 
 namespace Bangumi.Client.Wiki
 {
@@ -23,5 +25,18 @@ namespace Bangumi.Client.Wiki
         public string Description { get; }
 
         public InfoCollection InfoBox { get; }
+
+        public abstract Uri Uri { get; }
+
+        public async Task FetchDataAsync()
+        {
+            var doc = await MyHttpClient.GetDocumentAsync(this.Uri);
+
+        }
+
+        protected virtual void Populate(HtmlDocument doc)
+        {
+
+        }
     }
 }
