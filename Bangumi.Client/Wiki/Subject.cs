@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bangumi.Client.Internal;
 
 namespace Bangumi.Client.Wiki
 {
     public class Subject : Topic
     {
-        protected Subject(long id) : base(id)
+        public Subject(long id) : base(id)
         {
         }
 
-        public override Uri Uri => throw new NotImplementedException();
+        public override Uri Uri => new Uri(Uris.RootUri, $"/subject/{Id}");
     }
 }

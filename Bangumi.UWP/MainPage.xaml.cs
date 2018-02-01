@@ -1,4 +1,6 @@
-﻿using HtmlAgilityPack;
+﻿using Bangumi.Client.Wiki;
+using Bangumi.Client.User;
+using HtmlAgilityPack;
 using Opportunity.MvvmUniverse;
 using System;
 using System.Collections.Generic;
@@ -28,20 +30,26 @@ namespace Bangumi.UWP
         public MainPage()
         {
             this.InitializeComponent();
-            DispatcherHelper.BeginInvoke(async () => this.imgCaptcha.Source = await Client.Authentication.SessionManager.GetCaptchaAsync());
+            DispatcherHelper.BeginInvoke(async () => this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync());
         }
 
         private async void imgCaptcha_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            this.imgCaptcha.Source = await Client.Authentication.SessionManager.GetCaptchaAsync();
+            this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                await Client.Authentication.SessionManager.LogOnAsync(this.tbMail.Text, this.pbPass.Password, this.tbCaptcha.Text);
+                await SessionManager.LogOnAsync(this.tbMail.Text, this.pbPass.Password, this.tbCaptcha.Text);
                 this.tbInfo.Text = "Succeed";
+                var u = await UserInfo.FetchAsync("opportunityl");
+                var u2 = await UserInfo.FetchAsync("opportunity");
+                var u3 = await UserInfo.FetchAsync(322573);
+                var u4 = await UserInfo.FetchAsync("opportuxcvnity");
+                var s = new Subject(253);
+                await s.FetchDataAsync();
             }
             catch (Exception ex)
             {

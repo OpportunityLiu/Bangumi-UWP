@@ -62,6 +62,18 @@ namespace Bangumi.Client.Internal
             });
         }
 
+        private static IAsyncOperationWithProgress<T, HttpProgress> loadJsonAsync<T>(IHttpAsyncOperation operation)
+        {
+            return Run<T, HttpProgress>(async (token, progress) =>
+            {
+                token.Register(operation.Cancel);
+                operation.Progress = (t, p) => progress.Report(p);
+                var response = await operation;
+                var s = await response.Content.ReadAsStringAsync();
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(s);
+            });
+        }
+
         private static IHttpBufferAsyncOperation loadBufferAsync(IHttpAsyncOperation operation)
         {
             return Run<IBuffer, HttpProgress>(async (token, progress) =>
@@ -153,6 +165,9 @@ namespace Bangumi.Client.Internal
         public static IHttpStringAsyncOperation GetStringAsync(Uri uri)
             => loadStringAsync(GetAsync(uri));
 
+        public static IAsyncOperationWithProgress<T, HttpProgress> GetJsonAsync<T>(Uri uri)
+            => loadJsonAsync<T>(GetAsync(uri));
+
         public static IHttpDocumentAsyncOperation GetDocumentAsync(Uri uri)
             => loadDocumentAsync(GetAsync(uri));
 
@@ -177,6 +192,15 @@ namespace Bangumi.Client.Internal
 
         public static IHttpStringAsyncOperation PostStringAsync(Uri uri, IEnumerable<KeyValuePair<string, string>> content)
             => loadStringAsync(PostAsync(uri, content));
+
+        public static IAsyncOperationWithProgress<T, HttpProgress> PostJsonAsync<T>(Uri uri, IHttpContent content)
+            => loadJsonAsync<T>(PostAsync(uri, content));
+
+        public static IAsyncOperationWithProgress<T, HttpProgress> PostJsonAsync<T>(Uri uri, string content)
+            => loadJsonAsync<T>(PostAsync(uri, content));
+
+        public static IAsyncOperationWithProgress<T, HttpProgress> PostJsonAsync<T>(Uri uri, IEnumerable<KeyValuePair<string, string>> content)
+            => loadJsonAsync<T>(PostAsync(uri, content));
 
         public static IHttpBufferAsyncOperation PostBufferAsync(Uri uri, IHttpContent content)
             => loadBufferAsync(PostAsync(uri, content));

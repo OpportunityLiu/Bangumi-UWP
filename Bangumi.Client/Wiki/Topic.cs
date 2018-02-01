@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using System.Threading;
 
 namespace Bangumi.Client.Wiki
 {
@@ -20,23 +21,26 @@ namespace Bangumi.Client.Wiki
 
         public long Id { get; }
 
-        public string Name { get; }
-
-        public string Description { get; }
-
-        public InfoCollection InfoBox { get; }
-
         public abstract Uri Uri { get; }
+
+        private string name;
+        public string Name { get => this.name; protected set => Set(ref this.name, value); }
+
+        private string description;
+        public string Description { get => this.description; protected set => Set(ref this.description, value); }
+
+        private InfoCollection infoBox;
+        public InfoCollection InfoBox => LazyInitializer.EnsureInitialized(ref this.infoBox);
 
         public async Task FetchDataAsync()
         {
             var doc = await MyHttpClient.GetDocumentAsync(this.Uri);
-
+            Populate(doc);
         }
 
         protected virtual void Populate(HtmlDocument doc)
         {
-
+            InfoBox.Populate(doc);
         }
     }
 }
