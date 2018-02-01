@@ -13,7 +13,7 @@ using Windows.Web.Http;
 
 namespace Bangumi.Client.User
 {
-    public sealed class UserInfo : ObservableObject
+    public sealed class UserInfo : ResponseObject
     {
         public static Task<UserInfo> FetchAsync(int userId)
         {
@@ -26,87 +26,75 @@ namespace Bangumi.Client.User
         {
             if (string.IsNullOrWhiteSpace(userName))
                 throw new ArgumentException("用户名或 UID 不能为空");
-            var r = await MyHttpClient.GetJsonAsync<UserInfoData>(new Uri(Uris.ApiUri, $"/user/{userName.Trim()}"));
-            r.Check();
-            var u = new UserInfo();
-            u.Populate(r, null);
-            return u;
+            return await MyHttpClient.GetJsonAsync<UserInfo>(new Uri(Uris.ApiUri, $"/user/{userName.Trim()}"));
         }
 
         internal UserInfo() { }
 
-        internal void Populate(UserInfoData data, string email)
+        protected override void CheckResponse(string request, int code, string error)
         {
-            if (data == null || data.id <= 0)
+            if (error != null)
             {
-                Email = default;
-                Id = default;
-                Uri = default;
-                UserName = default;
-                NickName = default;
-                AvaterUri = default;
-                Signature = default;
-                Auth = default;
-                OnPropertyChanged("");
-                return;
+                if (error == "Unauthorized")
+                    throw new ArgumentException("用户不存在或密码错误");
+                else if (error.StartsWith("40102 "))
+                    throw new ArgumentException("为保证账户安全，当前仅支持使用 Email 方式登录，请返回重试");
+                else if (code == 404)
+                    throw new ArgumentException("未找到指定的用户");
             }
-            Id = data.id;
-            Email = email;
-            Uri = Uris.CreateHttps(data.url);
-            UserName = data.username;
-            NickName = data.nickname;
-            AvaterUri = Uris.CreateHttps(data.avatar.large);
-            Signature = data.sign;
-            Auth = data.auth;
+            base.CheckResponse(request, code, error);
             OnPropertyChanged("");
         }
 
-        public int Id { get; private set; }
-        public Uri Uri { get; private set; }
-        public string UserName { get; private set; }
-        public string NickName { get; private set; }
-        public Uri AvaterUri { get; private set; }
-        public string Signature { get; private set; }
-        internal string Email { get; private set; }
-        internal string Auth { get; private set; }
-
-#pragma warning disable IDE1006 // 命名样式
-#pragma warning disable CS0649 
-        internal sealed class UserInfoData : JsonResponse
+        internal void Reset()
         {
-            public int id;
-            public string url;
-            public string username;
-            public string nickname;
-            public Avatar avatar;
-            public string sign;
-            public string auth;
-            public string auth_encode;
-
-
-            public override void Check()
-            {
-                if (this.error != null)
-                {
-                    if (this.error == "Unauthorized")
-                        throw new ArgumentException("用户不存在或密码错误");
-                    else if (this.error.StartsWith("40102 "))
-                        throw new ArgumentException("为保证账户安全，当前仅支持使用 Email 方式登录，请返回重试");
-                    else if (this.code == 404)
-                        throw new ArgumentException("未找到指定的用户");
-                }
-                base.Check();
-            }
-
-            internal sealed class Avatar
-            {
-                public string large;
-                public string medium;
-                public string small;
-            }
+            Id = default;
+            Uri = default;
+            UserName = default;
+            NickName = default;
+            Avater = default;
+            Signature = default;
+            Email = default;
+            Auth = default;
+            OnPropertyChanged("");
         }
-#pragma warning restore CS0649 
-#pragma warning restore IDE1006 // 命名样式
+
+        [JsonProperty("id")]
+        public int Id { get; private set; }
+        [JsonProperty("url")]
+        public Uri Uri { get; private set; }
+        [JsonProperty("username")]
+        public string UserName { get; private set; }
+        [JsonProperty("nickname")]
+        public string NickName { get; private set; }
+        [JsonProperty("avatar")]
+        public AvatarUri Avater { get; private set; }
+        [JsonProperty("sign")]
+        public string Signature { get; private set; }
+
+        [JsonProperty("email")]
+        internal string Email { get; set; }
+        [JsonProperty("auth")]
+        internal string Auth { get; set; }
+
+
+        public struct AvatarUri
+        {
+            [JsonConstructor]
+            internal AvatarUri(Uri small, Uri medium, Uri large)
+            {
+                this.Large = large;
+                this.Medium = medium;
+                this.Small = small;
+            }
+
+            [JsonProperty("large")]
+            public Uri Large { get; }
+            [JsonProperty("medium")]
+            public Uri Medium { get; }
+            [JsonProperty("small")]
+            public Uri Small { get; }
+        }
     }
 
 }

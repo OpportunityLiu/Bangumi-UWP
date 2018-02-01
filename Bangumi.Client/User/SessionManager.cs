@@ -12,12 +12,22 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 
 namespace Bangumi.Client.User
 {
     public static class SessionManager
     {
+        static SessionManager()
+        {
+            var data = Storage.Local.UserData;
+            if (!string.IsNullOrEmpty(data))
+                JsonConvert.PopulateObject(data, Current, ResponseObject.JsonSettings);
+        }
+
         private static readonly Uri logOnUri = new Uri(Uris.RootUri, "FollowTheRabbit");
+        private static readonly Uri authUri = new Uri(Uris.ApiUri, "/auth?source=intouch");
+        private const string CURRENT_USER_STORAGE = "CurrentUser";
 
         private static bool firstCallGetCaptchaAsync = true;
         public static async Task<ImageSource> GetCaptchaAsync()
@@ -59,10 +69,10 @@ namespace Bangumi.Client.User
                 var result = HtmlEntity.DeEntitize(text.InnerText);
                 throw new InvalidOperationException(result);
             }
-            var rapi = await MyHttpClient.PostJsonAsync<UserInfo.UserInfoData>(new Uri("https://api.bgm.tv/auth?source=onAir"), getData(email, password));
-            rapi.Check();
-            Current.Populate(rapi, email);
+            await MyHttpClient.PostJsonAsync(authUri, getData(email, password), Current);
+            Current.Email = email;
             SetCookieValue(CookieNames.Authentication, GetCookieValue(CookieNames.Authentication));
+            Storage.Local.UserData = JsonConvert.SerializeObject(Current, ResponseObject.JsonSettings);
             return;
 
             IEnumerable<KeyValuePair<string, string>> getForm(string e, string p, string c)
@@ -75,7 +85,7 @@ namespace Bangumi.Client.User
             };
             IEnumerable<KeyValuePair<string, string>> getData(string e, string p)
             {
-                yield return new KeyValuePair<string, string>("source", "onAir");
+                //yield return new KeyValuePair<string, string>("source", "intouch");
                 yield return new KeyValuePair<string, string>("username", e);
                 yield return new KeyValuePair<string, string>("password", p);
                 yield return new KeyValuePair<string, string>("auth", "0");
@@ -115,8 +125,9 @@ namespace Bangumi.Client.User
             {
                 MyHttpClient.CookieManager.DeleteCookie(item);
             }
-            Current.Populate(null, null);
             firstCallGetCaptchaAsync = true;
+            Current.Reset();
+            Storage.Local.UserData = null;
         }
 
         public static UserInfo Current { get; } = new UserInfo();

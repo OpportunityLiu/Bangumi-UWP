@@ -15,6 +15,7 @@ using IHttpBufferAsyncOperation = Windows.Foundation.IAsyncOperationWithProgress
 using IHttpInputStreamAsyncOperation = Windows.Foundation.IAsyncOperationWithProgress<Windows.Storage.Streams.IInputStream, Windows.Web.Http.HttpProgress>;
 using IHttpDocumentAsyncOperation = Windows.Foundation.IAsyncOperationWithProgress<HtmlAgilityPack.HtmlDocument, Windows.Web.Http.HttpProgress>;
 using Windows.ApplicationModel;
+using Newtonsoft.Json;
 
 namespace Bangumi.Client.Internal
 {
@@ -70,7 +71,23 @@ namespace Bangumi.Client.Internal
                 operation.Progress = (t, p) => progress.Report(p);
                 var response = await operation;
                 var s = await response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(s);
+                var r = JsonConvert.DeserializeObject<T>(s, ResponseObject.JsonSettings);
+                if (r is ResponseObject ro)
+                    ResponseObject.Check(ro);
+                return r;
+            });
+        }
+        private static IAsyncActionWithProgress<HttpProgress> loadJsonAsync<T>(IHttpAsyncOperation operation, T obj)
+        {
+            return Run<HttpProgress>(async (token, progress) =>
+            {
+                token.Register(operation.Cancel);
+                operation.Progress = (t, p) => progress.Report(p);
+                var response = await operation;
+                var s = await response.Content.ReadAsStringAsync();
+                JsonConvert.PopulateObject(s, obj, ResponseObject.JsonSettings);
+                if (obj is ResponseObject ro)
+                    ResponseObject.Check(ro);
             });
         }
 
@@ -168,6 +185,9 @@ namespace Bangumi.Client.Internal
         public static IAsyncOperationWithProgress<T, HttpProgress> GetJsonAsync<T>(Uri uri)
             => loadJsonAsync<T>(GetAsync(uri));
 
+        public static IAsyncActionWithProgress<HttpProgress> GetJsonAsync<T>(Uri uri, T obj)
+            => loadJsonAsync(GetAsync(uri), obj);
+
         public static IHttpDocumentAsyncOperation GetDocumentAsync(Uri uri)
             => loadDocumentAsync(GetAsync(uri));
 
@@ -201,6 +221,15 @@ namespace Bangumi.Client.Internal
 
         public static IAsyncOperationWithProgress<T, HttpProgress> PostJsonAsync<T>(Uri uri, IEnumerable<KeyValuePair<string, string>> content)
             => loadJsonAsync<T>(PostAsync(uri, content));
+
+        public static IAsyncActionWithProgress<HttpProgress> PostJsonAsync<T>(Uri uri, IHttpContent content, T obj)
+            => loadJsonAsync(PostAsync(uri, content), obj);
+
+        public static IAsyncActionWithProgress<HttpProgress> PostJsonAsync<T>(Uri uri, string content, T obj)
+            => loadJsonAsync(PostAsync(uri, content), obj);
+
+        public static IAsyncActionWithProgress<HttpProgress> PostJsonAsync<T>(Uri uri, IEnumerable<KeyValuePair<string, string>> content, T obj)
+            => loadJsonAsync(PostAsync(uri, content), obj);
 
         public static IHttpBufferAsyncOperation PostBufferAsync(Uri uri, IHttpContent content)
             => loadBufferAsync(PostAsync(uri, content));
