@@ -41,6 +41,7 @@ namespace Bangumi.UWP
         {
             try
             {
+                var user = SessionManager.Current;
                 var u = await UserInfo.FetchAsync("opportunityl");
                 var u2 = await UserInfo.FetchAsync("opportunity");
                 var u3 = await UserInfo.FetchAsync(322573);

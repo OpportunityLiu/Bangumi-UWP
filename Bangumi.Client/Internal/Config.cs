@@ -2,10 +2,12 @@
 
 namespace Bangumi.Client.Internal
 {
-    internal static class Uris
+    internal static class Config
     {
         public static Uri RootUri { get; } = new Uri("https://bgm.tv/");
         public static Uri ApiUri { get; } = new Uri("https://api.bgm.tv/");
+
+        public const string ApiSource = "intouch";
 
         public static Uri CreateHttps(string uri)
         {

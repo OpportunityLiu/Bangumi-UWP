@@ -15,7 +15,7 @@ namespace Bangumi.Client.Internal
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var str = reader.Value.ToString();
-            return Uris.CreateHttps(str);
+            return Config.CreateHttps(str);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

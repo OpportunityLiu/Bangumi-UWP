@@ -26,7 +26,7 @@ namespace Bangumi.Client.User
         {
             if (string.IsNullOrWhiteSpace(userName))
                 throw new ArgumentException("用户名或 UID 不能为空");
-            return await MyHttpClient.GetJsonAsync<UserInfo>(new Uri(Uris.ApiUri, $"/user/{userName.Trim()}"));
+            return await MyHttpClient.GetJsonAsync<UserInfo>(new Uri(Config.ApiUri, $"/user/{userName.Trim()}"));
         }
 
         internal UserInfo() { }

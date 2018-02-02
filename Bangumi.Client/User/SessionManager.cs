@@ -25,9 +25,8 @@ namespace Bangumi.Client.User
                 JsonConvert.PopulateObject(data, Current, ResponseObject.JsonSettings);
         }
 
-        private static readonly Uri logOnUri = new Uri(Uris.RootUri, "FollowTheRabbit");
-        private static readonly Uri authUri = new Uri(Uris.ApiUri, "/auth?source=intouch");
-        private const string CURRENT_USER_STORAGE = "CurrentUser";
+        private static readonly Uri logOnUri = new Uri(Config.RootUri, "FollowTheRabbit");
+        private static readonly Uri authUri = new Uri(Config.ApiUri, "/auth?source=" + Config.ApiSource);
 
         private static bool firstCallGetCaptchaAsync = true;
         public static async Task<ImageSource> GetCaptchaAsync()
@@ -39,7 +38,7 @@ namespace Bangumi.Client.User
                 LogOff();
                 await MyHttpClient.GetAsync(logOnUri);
             }
-            var uri = new Uri(Uris.RootUri, $"signup/captcha?{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{new Random().Next(1, 7)}");
+            var uri = new Uri(Config.RootUri, $"signup/captcha?{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{new Random().Next(1, 7)}");
             using (var stream = (await MyHttpClient.GetBufferAsync(uri)).AsStream().AsRandomAccessStream())
             {
                 await DispatcherHelper.Yield();
@@ -85,7 +84,7 @@ namespace Bangumi.Client.User
             };
             IEnumerable<KeyValuePair<string, string>> getData(string e, string p)
             {
-                //yield return new KeyValuePair<string, string>("source", "intouch");
+                yield return new KeyValuePair<string, string>("source", Config.ApiSource);
                 yield return new KeyValuePair<string, string>("username", e);
                 yield return new KeyValuePair<string, string>("password", p);
                 yield return new KeyValuePair<string, string>("auth", "0");
@@ -116,7 +115,7 @@ namespace Bangumi.Client.User
 
         internal static IList<HttpCookie> GetCookies()
         {
-            return MyHttpClient.CookieManager.GetCookies(Uris.RootUri).ToList();
+            return MyHttpClient.CookieManager.GetCookies(Config.RootUri).ToList();
         }
 
         public static void LogOff()

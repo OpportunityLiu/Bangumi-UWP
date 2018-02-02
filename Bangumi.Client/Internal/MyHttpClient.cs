@@ -48,7 +48,7 @@ namespace Bangumi.Client.Internal
         {
             if (!uri.IsAbsoluteUri)
             {
-                uri = new Uri(Uris.RootUri, uri);
+                uri = new Uri(Config.RootUri, uri);
             }
         }
 
