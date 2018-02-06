@@ -12,6 +12,8 @@
     <Image x:Name="imgCaptcha" Height="100" MinWidth="100" PointerReleased="imgCaptcha_PointerReleased"/>
     <TextBox x:Name="tbCaptcha" />
     <Button Click="Button_Click">Log on</Button>
+    <Button Click="Button_Click_1">Log off</Button>
+    <Button Click="Button_Click_2">Exe</Button>
     <TextBlock x:Name="tbInfo" />
   </StackPanel>
 </Page>
