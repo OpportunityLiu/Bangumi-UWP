@@ -40,6 +40,7 @@ namespace Bangumi.Client
             obj.request = null;
             obj.code = 0;
             obj.error = null;
+
             obj.CheckResponse(req, code, error);
         }
     }

@@ -25,10 +25,11 @@ namespace Bangumi.Client.User
                 JsonConvert.PopulateObject(data, Current, ResponseObject.JsonSettings);
         }
 
-        private static readonly Uri logOnUri = new Uri(Config.RootUri, "FollowTheRabbit");
+        private static readonly Uri logOnUri = new Uri(Config.RootUri, "/FollowTheRabbit");
         private static readonly Uri authUri = new Uri(Config.ApiUri, "/auth?source=" + Config.ApiSource);
 
         private static bool firstCallGetCaptchaAsync = true;
+        private static Random random;
         public static async Task<ImageSource> GetCaptchaAsync()
         {
             if (!IsGuest)
@@ -38,7 +39,7 @@ namespace Bangumi.Client.User
                 LogOff();
                 await MyHttpClient.GetAsync(logOnUri);
             }
-            var uri = new Uri(Config.RootUri, $"signup/captcha?{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{new Random().Next(1, 7)}");
+            var uri = getCaptchaUri();
             using (var stream = (await MyHttpClient.GetBufferAsync(uri)).AsStream().AsRandomAccessStream())
             {
                 await DispatcherHelper.Yield();
@@ -46,6 +47,17 @@ namespace Bangumi.Client.User
                 var image = new BitmapImage();
                 await image.SetSourceAsync(stream);
                 return image;
+            }
+
+            Uri getCaptchaUri()
+            {
+                var r = random;
+                if (r == null)
+                {
+                    r = new Random();
+                    random = r;
+                }
+                return new Uri(Config.RootUri, $"signup/captcha?{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{r.Next(1, 7)}");
             }
         }
 
@@ -93,6 +105,7 @@ namespace Bangumi.Client.User
             };
         }
 
+        public static UserInfo Current { get; } = new UserInfo();
         public static bool IsGuest => Current.Id <= 0;
 
         internal static string GetCookieValue(string cookieName)
@@ -128,7 +141,5 @@ namespace Bangumi.Client.User
             Current.Reset();
             Storage.Local.UserData = null;
         }
-
-        public static UserInfo Current { get; } = new UserInfo();
     }
 }
