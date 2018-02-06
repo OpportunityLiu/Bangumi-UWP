@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -30,6 +31,13 @@ namespace Bangumi.UWP
         public MainPage()
         {
             this.InitializeComponent();
+            Dispatcher.Begin(async () =>
+            {
+                if (SessionManager.IsGuest)
+                    this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync();
+                else
+                    this.tbInfo.Text = SessionManager.Current.Uri.ToString();
+            });
         }
 
         private async void imgCaptcha_PointerReleased(object sender, PointerRoutedEventArgs e)
@@ -41,18 +49,28 @@ namespace Bangumi.UWP
         {
             try
             {
-                var user = SessionManager.Current;
-                var u = await UserInfo.FetchAsync("opportunityl");
-                var u2 = await UserInfo.FetchAsync("opportunity");
-                var u3 = await UserInfo.FetchAsync(322573);
-                //var u4 = await UserInfo.FetchAsync("opportuxcvnity");
-                var s = new Subject(253);
-                await s.FetchDataAsync();
+                await SessionManager.LogOnAsync(this.tbMail.Text, this.pbPass.Password, this.tbCaptcha.Text);
+                this.tbInfo.Text = SessionManager.Current.Uri.ToString();
             }
             catch (Exception ex)
             {
                 this.tbInfo.Text = ex.Message;
             }
+        }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            SessionManager.LogOff();
+            this.tbInfo.Text = "LogOff";
+            this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync();
+        }
+
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            var u = await UserInfo.FetchAsync(213421);
+            this.tbInfo.Text = u.Uri.ToString();
+            var s = new Subject(253);
+            await s.FetchDataAsync();
         }
     }
 }
