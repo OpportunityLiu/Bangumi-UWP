@@ -114,11 +114,13 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Internal\Config.cs" />
     <Compile Include="Internal\CookieNames.cs" />
-    <Compile Include="Internal\JsonResponse.cs" />
     <Compile Include="Internal\MyHttpClient.cs" />
-    <Compile Include="Internal\Uris.cs" />
+    <Compile Include="Internal\Storage.cs" />
+    <Compile Include="Internal\UriJsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseObject.cs" />
     <Compile Include="User\SessionManager.cs" />
     <Compile Include="User\UserInfo.cs" />
     <Compile Include="Wiki\Person.cs" />

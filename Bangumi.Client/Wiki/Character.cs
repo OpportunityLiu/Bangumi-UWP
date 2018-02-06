@@ -11,6 +11,6 @@ namespace Bangumi.Client.Wiki
     {
         public Character(long id) : base(id) { }
 
-        public override Uri Uri => new Uri(Uris.RootUri, $"/character/{Id}");
+        public override Uri Uri => new Uri(Config.RootUri, $"/character/{Id}");
     }
 }

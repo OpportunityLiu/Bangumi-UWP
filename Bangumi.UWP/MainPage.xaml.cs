@@ -30,7 +30,6 @@ namespace Bangumi.UWP
         public MainPage()
         {
             this.InitializeComponent();
-            DispatcherHelper.BeginInvoke(async () => this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync());
         }
 
         private async void imgCaptcha_PointerReleased(object sender, PointerRoutedEventArgs e)
@@ -42,12 +41,11 @@ namespace Bangumi.UWP
         {
             try
             {
-                await SessionManager.LogOnAsync(this.tbMail.Text, this.pbPass.Password, this.tbCaptcha.Text);
-                this.tbInfo.Text = "Succeed";
+                var user = SessionManager.Current;
                 var u = await UserInfo.FetchAsync("opportunityl");
                 var u2 = await UserInfo.FetchAsync("opportunity");
                 var u3 = await UserInfo.FetchAsync(322573);
-                var u4 = await UserInfo.FetchAsync("opportuxcvnity");
+                //var u4 = await UserInfo.FetchAsync("opportuxcvnity");
                 var s = new Subject(253);
                 await s.FetchDataAsync();
             }
