@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -30,6 +31,7 @@ namespace Bangumi.UWP
         public MainPage()
         {
             this.InitializeComponent();
+            Dispatcher.Begin(async () => this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync());
         }
 
         private async void imgCaptcha_PointerReleased(object sender, PointerRoutedEventArgs e)
@@ -48,6 +50,7 @@ namespace Bangumi.UWP
                 //var u4 = await UserInfo.FetchAsync("opportuxcvnity");
                 var s = new Subject(253);
                 await s.FetchDataAsync();
+                SessionManager.LogOff();
             }
             catch (Exception ex)
             {

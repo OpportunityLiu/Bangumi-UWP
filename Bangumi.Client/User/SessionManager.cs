@@ -13,17 +13,17 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using Opportunity.MvvmUniverse.Storage;
 
 namespace Bangumi.Client.User
 {
     public static class SessionManager
     {
-        static SessionManager()
-        {
-            var data = Storage.Local.UserData;
-            if (!string.IsNullOrEmpty(data))
-                JsonConvert.PopulateObject(data, Current, ResponseObject.JsonSettings);
-        }
+        private static readonly StorageProperty<UserInfo> userData
+            = StorageProperty.CreateLocal("Bangumi.Client/UserData", () => new UserInfo(), serializer: new JsonSerializer<UserInfo>());
+        public static UserInfo Current => userData.Value;
+
+        public static bool IsGuest => Current.Id <= 0;
 
         private static readonly Uri logOnUri = new Uri(Config.RootUri, "FollowTheRabbit");
         private static readonly Uri authUri = new Uri(Config.ApiUri, "/auth?source=" + Config.ApiSource);
@@ -71,7 +71,7 @@ namespace Bangumi.Client.User
             await MyHttpClient.PostJsonAsync(authUri, getData(email, password), Current);
             Current.Email = email;
             SetCookieValue(CookieNames.Authentication, GetCookieValue(CookieNames.Authentication));
-            Storage.Local.UserData = JsonConvert.SerializeObject(Current, ResponseObject.JsonSettings);
+            userData.Flush();
             return;
 
             IEnumerable<KeyValuePair<string, string>> getForm(string e, string p, string c)
@@ -92,8 +92,6 @@ namespace Bangumi.Client.User
                 yield return new KeyValuePair<string, string>("sysusername", "0");
             };
         }
-
-        public static bool IsGuest => Current.Id <= 0;
 
         internal static string GetCookieValue(string cookieName)
         {
@@ -126,9 +124,7 @@ namespace Bangumi.Client.User
             }
             firstCallGetCaptchaAsync = true;
             Current.Reset();
-            Storage.Local.UserData = null;
+            userData.Flush();
         }
-
-        public static UserInfo Current { get; } = new UserInfo();
     }
 }
