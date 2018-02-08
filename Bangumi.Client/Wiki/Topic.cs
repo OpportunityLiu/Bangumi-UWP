@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Bangumi.Client.Wiki
 {
-    public abstract class Topic : ObservableObject
+    public abstract class Topic : ResponseObject
     {
         protected Topic(long id)
         {
@@ -26,6 +26,9 @@ namespace Bangumi.Client.Wiki
         private string name;
         public string Name { get => this.name; protected set => Set(ref this.name, value); }
 
+        private string nameCN;
+        public string NameCN { get => this.nameCN; protected set => Set(ref this.nameCN, value); }
+
         private string description;
         public string Description { get => this.description; protected set => Set(ref this.description, value); }
 
@@ -38,9 +41,9 @@ namespace Bangumi.Client.Wiki
             Populate(doc);
         }
 
-        protected virtual void Populate(HtmlDocument doc)
+        protected virtual void Populate(HtmlDocument document)
         {
-            InfoBox.Populate(doc);
+            InfoBox.Populate(document);
         }
     }
 }

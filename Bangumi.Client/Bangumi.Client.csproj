@@ -126,9 +126,9 @@
     <Compile Include="Wiki\Person.cs" />
     <Compile Include="Wiki\Character.cs" />
     <Compile Include="Wiki\InfoCollection.cs" />
-    <Compile Include="Wiki\InfoRecord.cs" />
     <Compile Include="Wiki\Mono.cs" />
     <Compile Include="Wiki\Subject.cs" />
+    <Compile Include="Wiki\Tag.cs" />
     <Compile Include="Wiki\Topic.cs" />
     <EmbeddedResource Include="Properties\Bangumi.Client.rd.xml" />
   </ItemGroup>
@@ -146,7 +146,7 @@
       <Version>1.1.5</Version>
     </PackageReference>
     <PackageReference Include="Opportunity.MvvmUniverse">
-      <Version>2.0.0</Version>
+      <Version>2.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

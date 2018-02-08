@@ -26,10 +26,10 @@ namespace Bangumi.Client.User
         public static bool IsGuest => Current.Id <= 0;
 
         private static readonly Uri logOnUri = new Uri(Config.RootUri, "/FollowTheRabbit");
-        private static readonly Uri authUri = new Uri(Config.ApiUri, "/auth?source=" + Config.ApiSource);
+        private static readonly Uri authUri = new Uri(Config.ApiUri, "/auth?" + Config.ApiSourceParam);
 
         private static bool firstCallGetCaptchaAsync = true;
-        private static Random random;
+        private static class RandomStorage { public static readonly Random Value = new Random(); }
         public static async Task<ImageSource> GetCaptchaAsync()
         {
             if (!IsGuest)
@@ -51,13 +51,9 @@ namespace Bangumi.Client.User
 
             Uri getCaptchaUri()
             {
-                var r = random;
-                if (r == null)
-                {
-                    r = new Random();
-                    random = r;
-                }
-                return new Uri(Config.RootUri, $"signup/captcha?{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{r.Next(1, 7)}");
+                var n = RandomStorage.Value.Next(1, 7).ToString();
+                var t = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+                return new Uri(Config.RootUri, $"/signup/captcha?{t}{n}");
             }
         }
 
@@ -96,7 +92,6 @@ namespace Bangumi.Client.User
             };
             IEnumerable<KeyValuePair<string, string>> getData(string e, string p)
             {
-                yield return new KeyValuePair<string, string>("source", Config.ApiSource);
                 yield return new KeyValuePair<string, string>("username", e);
                 yield return new KeyValuePair<string, string>("password", p);
                 yield return new KeyValuePair<string, string>("auth", "0");

@@ -67,8 +67,6 @@ namespace Bangumi.UWP
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            var u = await UserInfo.FetchAsync(213421);
-            this.tbInfo.Text = u.Uri.ToString();
             var s = new Subject(253);
             await s.FetchDataAsync();
         }
