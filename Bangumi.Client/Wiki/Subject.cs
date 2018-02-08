@@ -26,15 +26,18 @@ namespace Bangumi.Client.Wiki
             var nameNode = document.GetElementbyId("headerSubject")?.Element("h1")?.Element("a");
             if (nameNode != null)
             {
-                this.Name = HtmlEntity.DeEntitize(nameNode.InnerText);
-                this.NameCN = HtmlEntity.DeEntitize(nameNode.GetAttributeValue("title", ""));
+                this.Name = nameNode.GetInnerText();
+                this.NameCN = nameNode.GetAttribute("title", "");
             }
             var despNode = document.GetElementbyId("subject_summary");
             if (despNode != null)
             {
-                this.Description = HtmlEntity.DeEntitize(despNode.InnerText);
+                this.Description = despNode.GetInnerText();
             }
-            var tagsNodes = document.GetElementbyId("subject_detail")?.SelectNodes("div[@class='subject_tag_section']/div[@class='inner']/a");
+            var tagsNodes = document.GetElementbyId("subject_detail")
+                ?.Element("div", "subject_tag_section")
+                ?.Element("div", "inner")
+                ?.Elements("a");
             if (tagsNodes != null)
             {
                 if (this.tags == null)

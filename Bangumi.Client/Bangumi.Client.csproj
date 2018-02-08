@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Internal\Config.cs" />
     <Compile Include="Internal\CookieNames.cs" />
+    <Compile Include="Internal\HtmlHelper.cs" />
     <Compile Include="Internal\JsonSerializer.cs" />
     <Compile Include="Internal\MyHttpClient.cs" />
     <Compile Include="Internal\UriJsonConverter.cs" />
@@ -149,7 +150,6 @@
       <Version>2.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

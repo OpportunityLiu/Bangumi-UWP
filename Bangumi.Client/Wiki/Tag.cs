@@ -2,19 +2,21 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Bangumi.Client.Wiki
 {
+    [DebuggerDisplay(@"[{Value,nq} ({Count})]")]
     public readonly struct Tag : IEquatable<Tag>
     {
         internal static Tag Create(HtmlNode tagANode)
         {
-            var href = new Uri(Config.RootUri, HtmlEntity.DeEntitize(tagANode.GetAttributeValue("href", "")));
-            var v = HtmlEntity.DeEntitize(tagANode.FirstChild.InnerText);
-            var n = int.Parse(tagANode.LastChild.InnerText);
+            var href = tagANode.GetAttribute("href", Config.RootUri, null);
+            var v = tagANode.FirstChild.GetInnerText();
+            var n = int.Parse(tagANode.LastChild.GetInnerText());
             return new Tag(href, v, n);
         }
 

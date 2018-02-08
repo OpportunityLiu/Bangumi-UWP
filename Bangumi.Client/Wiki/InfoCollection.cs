@@ -18,7 +18,7 @@ namespace Bangumi.Client.Wiki
             var info = new Dictionary<string, List<InfoRecord>>();
             foreach (var line in infoBox.Elements("li"))
             {
-                var key = HtmlEntity.DeEntitize(line.FirstChild.InnerText);
+                var key = line.FirstChild.GetInnerText();
                 if (key.EndsWith(": "))
                     key = key.Substring(0, key.Length - 2);
                 if (!info.TryGetValue(key, out var list))
@@ -44,13 +44,9 @@ namespace Bangumi.Client.Wiki
     {
         internal InfoRecord(HtmlNode node)
         {
-            this.Text = HtmlEntity.DeEntitize(node.InnerText);
-            this.Title = HtmlEntity.DeEntitize(node.GetAttributeValue("title", ""));
-            var r = node.GetAttributeValue("href", null);
-            if (r != null)
-                Uri = new Uri(Config.RootUri, r);
-            else
-                Uri = null;
+            this.Text = node.GetInnerText();
+            this.Title = node.GetAttribute("title", "");
+            this.Uri = node.GetAttribute("href", Config.RootUri, null);
         }
 
         internal bool IsSeperator => string.IsNullOrEmpty(Title) && Uri == null && Text == "、";

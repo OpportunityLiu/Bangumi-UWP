@@ -73,7 +73,7 @@ namespace Bangumi.Client.User
             if (string.IsNullOrEmpty(GetCookieValue(CookieNames.Authentication)))
             {
                 var text = r.GetElementbyId("colunmNotice").SelectSingleNode("descendant::*[@class='text']");
-                var result = HtmlEntity.DeEntitize(text.InnerText);
+                var result = text.GetInnerText();
                 throw new InvalidOperationException(result);
             }
             await MyHttpClient.PostJsonAsync(authUri, getData(email, password), Current);
