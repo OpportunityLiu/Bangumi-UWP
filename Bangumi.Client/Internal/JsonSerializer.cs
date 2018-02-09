@@ -13,6 +13,8 @@ namespace Bangumi.Client.Internal
     class JsonSerializer<T> : ISerializer<T>
         where T : ResponseObject
     {
+        public bool IsFixedSize => false;
+
         public int CaculateSize(in T value)
         {
             if (value == null)
