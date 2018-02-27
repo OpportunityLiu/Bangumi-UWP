@@ -7,39 +7,37 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 
 namespace Bangumi.Client.Internal
 {
     class JsonSerializer<T> : ISerializer<T>
         where T : ResponseObject
     {
-        public bool IsFixedSize => false;
-
-        public int CaculateSize(in T value)
+        public void Serialize(in T value, DataWriter storage)
         {
             if (value == null)
-                return 0;
-            return JsonConvert.SerializeObject(value, ResponseObject.JsonSettings).Length * sizeof(char);
-        }
-
-        public void Serialize(in T value, Span<byte> storage)
-        {
-            if (value == null)
+            {
+                storage.WriteUInt32(uint.MaxValue);
                 return;
-            JsonConvert.SerializeObject(value, ResponseObject.JsonSettings).AsSpan().AsBytes().CopyTo(storage);
+            }
+            var str = JsonConvert.SerializeObject(value, ResponseObject.JsonSettings);
+            storage.WriteUInt32(storage.MeasureString(str));
+            storage.WriteString(str);
         }
 
-        public void Deserialize(ReadOnlySpan<byte> storage, ref T value)
+        public void Deserialize(DataReader storage, ref T value)
         {
-            if (storage.IsEmpty)
+            var length = storage.ReadUInt32();
+            if (length == uint.MaxValue)
             {
                 value = default;
                 return;
             }
-            var s = new string(storage.NonPortableCast<byte, char>().ToArray());
+            var str = storage.ReadString(length);
             if (value == null)
                 value = Activator.CreateInstance<T>();
-            JsonConvert.PopulateObject(s, value, ResponseObject.JsonSettings);
+            JsonConvert.PopulateObject(str, value, ResponseObject.JsonSettings);
         }
     }
 }

@@ -10,6 +10,16 @@ using Opportunity.MvvmUniverse.Collections;
 
 namespace Bangumi.Client.Wiki
 {
+    public enum SubjectType
+    {
+        Unknown = 0,
+        Book = 1,
+        Anime = 2,
+        Music = 3,
+        Game = 4,
+        Real = 6,
+    }
+
     public class Subject : Topic
     {
         public Subject(long id) : base(id)
@@ -21,8 +31,14 @@ namespace Bangumi.Client.Wiki
         private ObservableList<Tag> tags;
         public ObservableListView<Tag> Tags => this.tags?.AsReadOnly();
 
+        private SubjectType type;
+        public SubjectType Type { get => this.type; set => Set(ref this.type, value); }
+
         protected override void Populate(HtmlDocument document)
         {
+            var searchNode = document.GetElementbyId("siteSearchSelect").ChildNodes.FirstOrDefault(i => i.GetAttribute("selected", false));
+            if (searchNode != null)
+                this.Type = (SubjectType)searchNode.GetAttribute("value", 0);
             var nameNode = document.GetElementbyId("headerSubject")?.Element("h1")?.Element("a");
             if (nameNode != null)
             {
