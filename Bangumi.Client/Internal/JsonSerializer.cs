@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bangumi.Client.Schema;
+using Newtonsoft.Json;
 using Opportunity.MvvmUniverse.Storage;
 using System;
 using System.Collections.Generic;

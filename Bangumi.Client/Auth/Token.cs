@@ -1,5 +1,5 @@
 ﻿using Bangumi.Client.Internal;
-using Bangumi.Client.User;
+using Bangumi.Client.Schema;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -60,6 +60,8 @@ namespace Bangumi.Client.Auth
             MyHttpClient.SetAuthorization(this);
             IsValid = true;
         }
+
+        public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => RefershAsync();
 
         public bool IsValid { get; private set; }
 

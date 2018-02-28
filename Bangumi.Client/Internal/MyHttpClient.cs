@@ -17,6 +17,7 @@ using IHttpDocumentAsyncOperation = Windows.Foundation.IAsyncOperationWithProgre
 using Windows.ApplicationModel;
 using Newtonsoft.Json;
 using Bangumi.Client.Auth;
+using Bangumi.Client.Schema;
 
 namespace Bangumi.Client.Internal
 {

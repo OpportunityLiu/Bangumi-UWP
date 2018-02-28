@@ -1,5 +1,4 @@
-﻿using Bangumi.Client.Wiki;
-using Bangumi.Client.Auth;
+﻿using Bangumi.Client.Auth;
 using HtmlAgilityPack;
 using Opportunity.MvvmUniverse;
 using System;
@@ -21,6 +20,7 @@ using Windows.UI.Core;
 using Windows.UI.ApplicationSettings;
 using Windows.Security.Authentication.Web;
 using Bangumi.UWP.Internal;
+using Bangumi.Client.Schema;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -62,8 +62,8 @@ namespace Bangumi.UWP
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
             AuthManager.Clear();
-            var s = new Subject(168395);
-            await s.FetchDataAsync();
+            var s = new Subject(12);
+            await s.PopulateAsync();
         }
     }
 }

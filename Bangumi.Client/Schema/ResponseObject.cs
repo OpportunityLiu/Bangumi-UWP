@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Web.Http;
 
-namespace Bangumi.Client
+namespace Bangumi.Client.Schema
 {
-    public class ResponseObject : ObservableObject
+    public abstract class ResponseObject : ObservableObject
     {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         private string request;
@@ -25,6 +27,8 @@ namespace Bangumi.Client
                     new Internal.UriJsonConverter(),
                 },
             };
+
+        public abstract IAsyncActionWithProgress<HttpProgress> PopulateAsync();
 
         protected virtual void CheckResponse(string request, int code, string error)
         {

@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -49,6 +51,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -61,6 +64,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
@@ -73,6 +77,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
@@ -85,6 +90,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -97,6 +103,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -109,6 +116,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -121,18 +129,23 @@
     <Compile Include="Internal\MyHttpClient.cs" />
     <Compile Include="Internal\UriJsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResponseObject.cs" />
+    <Compile Include="Schema\~Wiki\~Subject\Blog.cs" />
+    <Compile Include="Schema\~Wiki\~Subject\SubjectType.cs" />
+    <Compile Include="Schema\~Wiki\~Subject\Topic.cs" />
+    <Compile Include="Schema\~Wiki\~Mono\Alias.cs" />
+    <Compile Include="Schema\~Wiki\~Mono\Character.cs" />
+    <Compile Include="Schema\~Wiki\~Subject\Episode.cs" />
+    <Compile Include="Schema\ImageUri.cs" />
+    <Compile Include="Schema\~Wiki\~Mono\MonoBase.cs" />
+    <Compile Include="Schema\~Wiki\~Mono\MonoInfo.cs" />
+    <Compile Include="Schema\~Wiki\~Mono\Person.cs" />
+    <Compile Include="Schema\ResponseObject.cs" />
     <Compile Include="Auth\IAuthInfo.cs" />
     <Compile Include="Auth\AuthManager.cs" />
     <Compile Include="Auth\Token.cs" />
-    <Compile Include="User\UserInfo.cs" />
-    <Compile Include="Wiki\Person.cs" />
-    <Compile Include="Wiki\Character.cs" />
-    <Compile Include="Wiki\InfoCollection.cs" />
-    <Compile Include="Wiki\Mono.cs" />
-    <Compile Include="Wiki\Subject.cs" />
-    <Compile Include="Wiki\Tag.cs" />
-    <Compile Include="Wiki\Topic.cs" />
+    <Compile Include="Schema\User.cs" />
+    <Compile Include="Schema\~Wiki\~Subject\Subject.cs" />
+    <Compile Include="Schema\WikiBase.cs" />
     <EmbeddedResource Include="Properties\Bangumi.Client.rd.xml" />
   </ItemGroup>
   <ItemGroup>
