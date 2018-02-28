@@ -24,15 +24,15 @@ namespace Bangumi.Client.Internal
     {
         static MyHttpClient()
         {
-            SetAuthorization(SessionManager.Current);
+            SetAuthorization(AuthManager.Current);
         }
 
         internal static void SetAuthorization(Token authToken)
         {
-            if (authToken?.AccessToken == null)
-                DefaultRequestHeaders.Authorization = null;
-            else
+            if (authToken?.IsValid == true)
                 DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue(authToken.TokenType, authToken.AccessToken);
+            else
+                DefaultRequestHeaders.Authorization = null;
         }
 
         private static readonly HttpClient inner = new HttpClient();

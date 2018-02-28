@@ -35,28 +35,10 @@ namespace Bangumi.Client.User
         {
             if (error != null)
             {
-                if (error == "Unauthorized")
-                    throw new ArgumentException("用户不存在或密码错误");
-                else if (error.StartsWith("40102 "))
-                    throw new ArgumentException("为保证账户安全，当前仅支持使用 Email 方式登录，请返回重试");
-                else if (code == 404)
+                if (code == 404)
                     throw new ArgumentException("未找到指定的用户");
             }
             base.CheckResponse(request, code, error);
-            OnPropertyChanged("");
-        }
-
-        internal void Reset()
-        {
-            Id = default;
-            Uri = default;
-            UserName = default;
-            NickName = default;
-            Avater = default;
-            Signature = default;
-            Email = default;
-            Auth = default;
-            OnPropertyChanged("");
         }
 
         [JsonProperty("id")]

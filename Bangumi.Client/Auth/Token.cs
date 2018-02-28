@@ -15,27 +15,28 @@ namespace Bangumi.Client.Auth
     {
         public static Uri TokenUri { get; } = new Uri("https://bgm.tv/oauth/access_token");
 
-        public static IAsyncOperationWithProgress<Token, HttpProgress> FetchAsync(IAuthInfo authInfo, Uri callbackUri)
+        public static IAsyncOperationWithProgress<Token, HttpProgress> FetchAsync(Uri callbackUri)
         {
-            if (authInfo == null)
-                throw new ArgumentNullException(nameof(authInfo));
             if (callbackUri == null)
                 throw new ArgumentNullException(nameof(callbackUri));
             var query = callbackUri.Query.Split(new[] { '?', '&', '=' }, StringSplitOptions.RemoveEmptyEntries);
             if (query.Length == 2)
-                return MyHttpClient.PostJsonAsync<Token>(TokenUri, getData("authorization_code", authInfo, query[1], null, null));
+                return MyHttpClient.PostJsonAsync<Token>(TokenUri, getData("authorization_code", query[1], null, null));
             else if (query.Length == 4)
             {
                 var ci = Array.IndexOf(query, "code") + 1;
                 var si = Array.IndexOf(query, "state") + 1;
                 if (ci > 0 && si > 0)
-                    return MyHttpClient.PostJsonAsync<Token>(TokenUri, getData("authorization_code", authInfo, query[ci], query[si], null));
+                    return MyHttpClient.PostJsonAsync<Token>(TokenUri, getData("authorization_code", query[ci], query[si], null));
             }
             throw new ArgumentException("回调参数错误");
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> getData(string grantType, IAuthInfo info, string code, string state, string refreshToken)
+        private static IEnumerable<KeyValuePair<string, string>> getData(string grantType, string code, string state, string refreshToken)
         {
+            var info = AuthManager.AuthInfo;
+            if (info == null)
+                throw new InvalidOperationException("Auth.SessionManager.AuthInfo has not set.");
             yield return new KeyValuePair<string, string>("grant_type", grantType);
             yield return new KeyValuePair<string, string>("client_id", info.GetAppId());
             yield return new KeyValuePair<string, string>("client_secret", info.GetAppSecret());
@@ -48,30 +49,31 @@ namespace Bangumi.Client.Auth
                 yield return new KeyValuePair<string, string>("refresh_token", refreshToken);
         }
 
-        public IAsyncActionWithProgress<HttpProgress> RefershAsync(IAuthInfo authInfo)
+        public IAsyncActionWithProgress<HttpProgress> RefershAsync()
         {
-            if (authInfo == null)
-                throw new ArgumentNullException(nameof(authInfo));
-            return MyHttpClient.PostJsonAsync(TokenUri, getData("refresh_token", authInfo, null, null, this.RefreshToken), this);
+            return MyHttpClient.PostJsonAsync(TokenUri, getData("refresh_token", null, null, this.RefreshToken), this);
         }
 
         protected override void CheckResponse(string request, int code, string error)
         {
             base.CheckResponse(request, code, error);
             MyHttpClient.SetAuthorization(this);
+            IsValid = true;
         }
 
+        public bool IsValid { get; private set; }
+
         [JsonProperty("user_id")]
-        public int UserId { get; set; } = -1;
+        public int UserId { get; private set; } = -1;
         [JsonProperty("access_token")]
-        public string AccessToken { get; set; }
+        public string AccessToken { get; private set; }
         [JsonProperty("expires_in")]
-        public int ExpiresIn { get; set; }
+        public int ExpiresIn { get; private set; }
         [JsonProperty("token_type")]
-        public string TokenType { get; set; }
+        public string TokenType { get; private set; }
         [JsonProperty("scope")]
-        public string Scope { get; set; }
+        public string Scope { get; private set; }
         [JsonProperty("refresh_token")]
-        public string RefreshToken { get; set; }
+        public string RefreshToken { get; private set; }
     }
 }

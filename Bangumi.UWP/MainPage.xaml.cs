@@ -42,47 +42,26 @@ namespace Bangumi.UWP
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            string result = "";
             try
             {
-                var state = Windows.Security.Cryptography.CryptographicBuffer.GenerateRandomNumber().ToString("X");
-                var webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None,
-                  new Uri($"https://bgm.tv/oauth/authorize?client_id={AuthInfo.Instance.GetAppId()}&response_type=code&state={state}"));
-                switch (webAuthenticationResult.ResponseStatus)
-                {
-                case WebAuthenticationStatus.Success:
-                    // Successful authentication. 
-                    result = webAuthenticationResult.ResponseData.ToString();
-                    await SessionManager.AuthAsync(AuthInfo.Instance, new Uri(webAuthenticationResult.ResponseData));
-                    break;
-                case WebAuthenticationStatus.ErrorHttp:
-                    // HTTP error. 
-                    result = webAuthenticationResult.ResponseErrorDetail.ToString();
-                    break;
-                case WebAuthenticationStatus.UserCancel:
-                    break;
-                default:
-                    // Other error.
-                    result = webAuthenticationResult.ResponseData.ToString();
-                    break;
-                }
+                await AuthManager.AuthAsync();
+                this.tbInfo.Text = $"Succeed {AuthManager.UserId}";
             }
             catch (Exception ex)
             {
                 // Authentication failed. Handle parameter, SSL/TLS, and Network Unavailable errors here. 
-                result = ex.Message;
+                this.tbInfo.Text = ex.Message;
             }
-            this.tbInfo.Text = result;
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            await SessionManager.RefreshAsync(AuthInfo.Instance);
+            await AuthManager.RefreshAsync();
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            SessionManager.Clear();
+            AuthManager.Clear();
             var s = new Subject(168395);
             await s.FetchDataAsync();
         }

@@ -1,4 +1,5 @@
-﻿using Opportunity.MvvmUniverse;
+﻿using Bangumi.UWP.Internal;
+using Opportunity.MvvmUniverse;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +32,7 @@ namespace Bangumi.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            Client.Auth.AuthManager.AuthInfo = new AuthInfo();
         }
 
         /// <summary>
