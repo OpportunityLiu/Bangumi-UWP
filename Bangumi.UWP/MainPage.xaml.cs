@@ -1,5 +1,5 @@
 ﻿using Bangumi.Client.Wiki;
-using Bangumi.Client.User;
+using Bangumi.Client.Auth;
 using HtmlAgilityPack;
 using Opportunity.MvvmUniverse;
 using System;
@@ -18,6 +18,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
+using Windows.UI.ApplicationSettings;
+using Windows.Security.Authentication.Web;
+using Bangumi.UWP.Internal;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -31,42 +34,55 @@ namespace Bangumi.UWP
         public MainPage()
         {
             this.InitializeComponent();
-            Dispatcher.Begin(async () =>
-            {
-                if (SessionManager.IsGuest)
-                    this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync();
-                else
-                    this.tbInfo.Text = SessionManager.Current.Uri.ToString();
-            });
         }
 
         private async void imgCaptcha_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            string result = "";
             try
             {
-                await SessionManager.LogOnAsync(this.tbMail.Text, this.pbPass.Password, this.tbCaptcha.Text);
-                this.tbInfo.Text = SessionManager.Current.Uri.ToString();
+                var state = Windows.Security.Cryptography.CryptographicBuffer.GenerateRandomNumber().ToString("X");
+                var webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None,
+                  new Uri($"https://bgm.tv/oauth/authorize?client_id={AuthInfo.Instance.GetAppId()}&response_type=code&state={state}"));
+                switch (webAuthenticationResult.ResponseStatus)
+                {
+                case WebAuthenticationStatus.Success:
+                    // Successful authentication. 
+                    result = webAuthenticationResult.ResponseData.ToString();
+                    await SessionManager.AuthAsync(AuthInfo.Instance, new Uri(webAuthenticationResult.ResponseData));
+                    break;
+                case WebAuthenticationStatus.ErrorHttp:
+                    // HTTP error. 
+                    result = webAuthenticationResult.ResponseErrorDetail.ToString();
+                    break;
+                case WebAuthenticationStatus.UserCancel:
+                    break;
+                default:
+                    // Other error.
+                    result = webAuthenticationResult.ResponseData.ToString();
+                    break;
+                }
             }
             catch (Exception ex)
             {
-                this.tbInfo.Text = ex.Message;
+                // Authentication failed. Handle parameter, SSL/TLS, and Network Unavailable errors here. 
+                result = ex.Message;
             }
+            this.tbInfo.Text = result;
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            SessionManager.LogOff();
-            this.tbInfo.Text = "LogOff";
-            this.imgCaptcha.Source = await SessionManager.GetCaptchaAsync();
+            await SessionManager.RefreshAsync(AuthInfo.Instance);
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            SessionManager.Clear();
             var s = new Subject(168395);
             await s.FetchDataAsync();
         }

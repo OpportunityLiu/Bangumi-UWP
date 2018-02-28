@@ -15,18 +15,18 @@ namespace Bangumi.Client.User
 {
     public sealed class UserInfo : ResponseObject
     {
-        public static Task<UserInfo> FetchAsync(int userId)
+        public static IAsyncOperationWithProgress<UserInfo, HttpProgress> FetchAsync(int userId)
         {
             if (userId <= 0)
                 throw new ArgumentException("UID 应为正整数");
             return FetchAsync(userId.ToString());
         }
 
-        public static async Task<UserInfo> FetchAsync(string userName)
+        public static IAsyncOperationWithProgress<UserInfo, HttpProgress> FetchAsync(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 throw new ArgumentException("用户名或 UID 不能为空");
-            return await MyHttpClient.GetJsonAsync<UserInfo>(new Uri(Config.ApiUri, $"/user/{userName.Trim()}"));
+            return MyHttpClient.GetJsonAsync<UserInfo>(new Uri(Config.ApiUri, $"/user/{userName.Trim()}"));
         }
 
         internal UserInfo() { }
@@ -78,7 +78,7 @@ namespace Bangumi.Client.User
         internal string Auth { get; set; }
 
 
-        public struct AvatarUri
+        public readonly struct AvatarUri
         {
             [JsonConstructor]
             internal AvatarUri(Uri small, Uri medium, Uri large)

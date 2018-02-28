@@ -122,7 +122,9 @@
     <Compile Include="Internal\UriJsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseObject.cs" />
-    <Compile Include="User\SessionManager.cs" />
+    <Compile Include="Auth\IAuthInfo.cs" />
+    <Compile Include="Auth\SessionManager.cs" />
+    <Compile Include="Auth\Token.cs" />
     <Compile Include="User\UserInfo.cs" />
     <Compile Include="Wiki\Person.cs" />
     <Compile Include="Wiki\Character.cs" />

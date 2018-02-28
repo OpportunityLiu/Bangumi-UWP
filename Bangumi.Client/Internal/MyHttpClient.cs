@@ -16,6 +16,7 @@ using IHttpInputStreamAsyncOperation = Windows.Foundation.IAsyncOperationWithPro
 using IHttpDocumentAsyncOperation = Windows.Foundation.IAsyncOperationWithProgress<HtmlAgilityPack.HtmlDocument, Windows.Web.Http.HttpProgress>;
 using Windows.ApplicationModel;
 using Newtonsoft.Json;
+using Bangumi.Client.Auth;
 
 namespace Bangumi.Client.Internal
 {
@@ -23,24 +24,18 @@ namespace Bangumi.Client.Internal
     {
         static MyHttpClient()
         {
-            var filter = new HttpBaseProtocolFilter();
-            inner = new HttpClient(filter);
-            filter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
-            CookieManager = filter.CookieManager;
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("Mozilla", "5.0"));
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("Windows NT 10.0; Win64; x64"));
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("AppleWebKit", "537.36"));
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("KHTML, like Gecko"));
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("Chrome", "58.0.3029.110"));
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("Safari", "537.36"));
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue("Edge", "16.16299"));
-            var version = Package.Current.Id.Version;
-            DefaultRequestHeaders.UserAgent.Add(new HttpProductInfoHeaderValue(Package.Current.DisplayName, $"{version.Major}.{version.Minor}.{version.Revision}"));
+            SetAuthorization(SessionManager.Current);
+        }
+
+        internal static void SetAuthorization(Token authToken)
+        {
+            if (authToken?.AccessToken == null)
+                DefaultRequestHeaders.Authorization = null;
+            else
+                DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue(authToken.TokenType, authToken.AccessToken);
         }
 
         private static readonly HttpClient inner = new HttpClient();
-
-        public static HttpCookieManager CookieManager { get; }
 
         public static HttpRequestHeaderCollection DefaultRequestHeaders => inner.DefaultRequestHeaders;
 

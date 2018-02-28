@@ -12,8 +12,9 @@ using Windows.Storage.Streams;
 namespace Bangumi.Client.Internal
 {
     class JsonSerializer<T> : ISerializer<T>
-        where T : ResponseObject
     {
+        public static JsonSerializer<T> Instance { get; } = new JsonSerializer<T>();
+
         public void Serialize(in T value, DataWriter storage)
         {
             if (value == null)
