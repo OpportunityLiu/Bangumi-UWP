@@ -20,11 +20,13 @@ namespace Bangumi.Client.Schema
             this.Id = id;
         }
 
-        public long Id { get; }
+        private long id;
+        [JsonProperty("id")]
+        public long Id { get => this.id; protected set => Set(ref this.id, value); }
 
         private Uri uri;
         [JsonProperty("url")]
-        public Uri Uri { get => this.uri; set => Set(ref this.uri, value); }
+        public Uri Uri { get => this.uri; protected set => Set(ref this.uri, value); }
 
         private string name;
         [JsonProperty("name")]

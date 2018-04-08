@@ -24,7 +24,7 @@ namespace Bangumi.Client.Schema
             {
                 Converters =
                 {
-                    new Internal.UriJsonConverter(),
+                    new Internal.UriConverter(),
                 },
             };
 

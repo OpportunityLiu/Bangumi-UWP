@@ -62,7 +62,7 @@ namespace Bangumi.Client.Auth
             if (DispatcherHelper.Dispatcher.HasThreadAccess)
                 return authCoreAsync();
             else
-                return DispatcherHelper.Dispatcher.RunAsync(authCoreAsync);
+                return DispatcherHelper.Dispatcher.RunAsync((Func<IAsyncAction>)authCoreAsync);
         }
 
         public static IAsyncAction RefreshAsync()

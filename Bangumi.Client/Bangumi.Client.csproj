@@ -127,7 +127,7 @@
     <Compile Include="Internal\HtmlHelper.cs" />
     <Compile Include="Internal\JsonSerializer.cs" />
     <Compile Include="Internal\MyHttpClient.cs" />
-    <Compile Include="Internal\UriJsonConverter.cs" />
+    <Compile Include="Internal\~JsonConverters\UriConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema\~Wiki\~Subject\Blog.cs" />
     <Compile Include="Schema\~Wiki\~Subject\SubjectType.cs" />
@@ -150,19 +150,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.7.0</Version>
+      <Version>1.7.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.7</Version>
+      <Version>6.0.8</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>11.0.1</Version>
+      <Version>11.0.2</Version>
     </PackageReference>
     <PackageReference Include="Opportunity.Helpers.Universal">
-      <Version>1.3.0</Version>
+      <Version>1.3.3</Version>
     </PackageReference>
     <PackageReference Include="Opportunity.MvvmUniverse">
-      <Version>2.3.1</Version>
+      <Version>2.5.5</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

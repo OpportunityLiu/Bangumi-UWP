@@ -21,6 +21,10 @@ using Windows.UI.ApplicationSettings;
 using Windows.Security.Authentication.Web;
 using Bangumi.UWP.Internal;
 using Bangumi.Client.Schema;
+using System.Threading.Tasks;
+using Opportunity.MvvmUniverse.Views;
+using Opportunity.MvvmUniverse.Services.Navigation;
+using Bangumi.UWP.Views;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -44,7 +48,7 @@ namespace Bangumi.UWP
         {
             try
             {
-                await AuthManager.AuthAsync();
+                await Task.Run(async () => await AuthManager.AuthAsync());
                 this.tbInfo.Text = $"Succeed {AuthManager.UserId}";
             }
             catch (Exception ex)
@@ -61,9 +65,8 @@ namespace Bangumi.UWP
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            AuthManager.Clear();
-            var s = new Subject(12);
-            await s.PopulateAsync();
+            var id = long.Parse(this.tbMail.Text);
+            await Navigator.GetForCurrentView().NavigateAsync(typeof(SubjectPage), id);
         }
     }
 }

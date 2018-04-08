@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using System;
+using Windows.Foundation;
 using Windows.Web.Http;
 
 namespace Bangumi.Client.Schema
@@ -17,6 +18,6 @@ namespace Bangumi.Client.Schema
         public string desc { get; set; }
         public string status { get; set; }
 
-        public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => throw new System.NotImplementedException();
+        public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => throw new NotImplementedException();
     }
 }

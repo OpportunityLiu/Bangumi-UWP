@@ -1,5 +1,7 @@
 ﻿using Bangumi.UWP.Internal;
 using Opportunity.MvvmUniverse;
+using Opportunity.MvvmUniverse.Services.Navigation;
+using Opportunity.MvvmUniverse.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,7 +53,7 @@ namespace Bangumi.UWP
             {
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
-
+                Navigator.GetOrCreateForCurrentView().Handlers.Add(rootFrame.AsNavigationHandler());
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
