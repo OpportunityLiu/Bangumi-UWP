@@ -50,6 +50,7 @@ namespace Bangumi.UWP
             {
                 await Task.Run(async () => await AuthManager.AuthAsync());
                 this.tbInfo.Text = $"Succeed {AuthManager.UserId}";
+                var u = await User.FetchAsync(AuthManager.UserId);
             }
             catch (Exception ex)
             {

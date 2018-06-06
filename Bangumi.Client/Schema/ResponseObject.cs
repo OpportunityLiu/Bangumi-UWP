@@ -36,7 +36,7 @@ namespace Bangumi.Client.Schema
                 throw new InvalidOperationException(error);
         }
 
-        public static void Check(ResponseObject obj)
+        internal protected static void Check(ResponseObject obj)
         {
             var req = obj.request;
             var code = obj.code;

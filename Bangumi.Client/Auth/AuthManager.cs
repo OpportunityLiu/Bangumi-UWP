@@ -18,6 +18,7 @@ using Opportunity.Helpers.Universal.AsyncHelpers;
 using System.Diagnostics;
 using Windows.Security.Authentication.Web;
 using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
 
 namespace Bangumi.Client.Auth
 {
@@ -59,10 +60,11 @@ namespace Bangumi.Client.Auth
         {
             if (AuthInfo == null)
                 throw new InvalidOperationException("Auth.SessionManager.AuthInfo has not set.");
-            if (DispatcherHelper.Dispatcher.HasThreadAccess)
+            var dispatcher = CoreApplication.MainView.Dispatcher;
+            if (dispatcher.HasThreadAccess)
                 return authCoreAsync();
             else
-                return DispatcherHelper.Dispatcher.RunAsync((Func<IAsyncAction>)authCoreAsync);
+                return dispatcher.RunAsync(authCoreAsync);
         }
 
         public static IAsyncAction RefreshAsync()
