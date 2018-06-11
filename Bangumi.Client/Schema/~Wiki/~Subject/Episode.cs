@@ -4,14 +4,14 @@ using Windows.Web.Http;
 
 namespace Bangumi.Client.Schema
 {
-    public class Episode : ResponseObject
+    public class Episode : WikiBase
     {
-        public int id { get; set; }
-        public string url { get; set; }
+        public Episode(long id) : base(id)
+        {
+        }
+
         public int type { get; set; }
         public int sort { get; set; }
-        public string name { get; set; }
-        public string name_cn { get; set; }
         public string duration { get; set; }
         public string airdate { get; set; }
         public int comment { get; set; }

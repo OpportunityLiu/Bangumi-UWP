@@ -1,12 +1,18 @@
-﻿namespace Bangumi.Client.Schema
+﻿using Newtonsoft.Json;
+using Windows.Foundation;
+using Windows.Web.Http;
+
+namespace Bangumi.Client.Schema
 {
     public class Person : MonoBase
     {
-        public string name_cn { get; set; }
-        public string role_name { get; set; }
-        public int comment { get; set; }
-        public int collects { get; set; }
-        public MonoInfo info { get; set; }
+        [JsonConstructor]
+        public Person(long id) : base(id)
+        {
+        }
+
         public string[] jobs { get; set; }
+
+        public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => throw new System.NotImplementedException();
     }
 }

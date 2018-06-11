@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bangumi.Client.Internal
 {
-    internal class UriConverter : JsonConverter
+    internal sealed class UriConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
             => objectType == typeof(Uri);

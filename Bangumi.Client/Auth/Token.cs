@@ -11,7 +11,7 @@ using Windows.Web.Http;
 
 namespace Bangumi.Client.Auth
 {
-    internal class Token : ResponseObject
+    internal sealed class Token : ResponseObject
     {
         public static Uri TokenUri { get; } = new Uri("https://bgm.tv/oauth/access_token");
 
@@ -58,19 +58,22 @@ namespace Bangumi.Client.Auth
         {
             base.CheckResponse(request, code, error);
             MyHttpClient.SetAuthorization(this);
-            IsValid = true;
         }
 
         public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => RefershAsync();
 
-        public bool IsValid { get; private set; }
+        [JsonIgnore]
+        public bool IsValid => DateTimeOffset.Now <= Expired;
 
         [JsonProperty("user_id")]
         public int UserId { get; private set; } = -1;
         [JsonProperty("access_token")]
         public string AccessToken { get; private set; }
-        [JsonProperty("expires_in")]
-        public int ExpiresIn { get; private set; }
+        [JsonProperty("expires_in", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        private int ExpiresIn { get => 0; set => Expired = DateTimeOffset.Now.AddSeconds(value); }
+        [JsonProperty("expired")]
+        [JsonConverter(typeof(Newtonsoft.Json.Converters.UnixDateTimeConverter))]
+        public DateTimeOffset Expired { get; private set; }
         [JsonProperty("token_type")]
         public string TokenType { get; private set; }
         [JsonProperty("scope")]

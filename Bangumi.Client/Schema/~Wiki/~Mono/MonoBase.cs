@@ -5,16 +5,14 @@ using System;
 
 namespace Bangumi.Client.Schema
 {
-    public abstract class MonoBase : ResponseObject
+    public abstract class MonoBase : WikiBase
     {
-        public int id { get; set; }
-        public string url { get; set; }
-        public string name { get; set; }
+        [JsonConstructor]
+        protected MonoBase(long id) : base(id) { }
 
-        private ImageUri images;
-        [JsonProperty("images", NullValueHandling = NullValueHandling.Ignore)]
-        public ImageUri Images { get => this.images; set => Set(ref this.images, value); }
-
-        public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => throw new System.NotImplementedException();
+        public string role_name { get; set; }
+        public int comment { get; set; }
+        public int collects { get; set; }
+        public MonoInfo info { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace Bangumi.Client.Schema
             return MyHttpClient.GetJsonAsync<User>(new Uri(Config.ApiUri, $"/user/{userName.Trim()}"));
         }
 
+        [JsonConstructor]
         public User(int id)
         {
             if (id <= 0)

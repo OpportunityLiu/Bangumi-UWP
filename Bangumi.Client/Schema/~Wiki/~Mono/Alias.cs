@@ -14,7 +14,6 @@ namespace Bangumi.Client.Schema
             this.Nickname = nick;
         }
 
-
         public string Japanese { get; }
         public string Romaji { get; }
         public string Kana { get; }

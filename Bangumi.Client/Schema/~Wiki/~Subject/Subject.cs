@@ -12,24 +12,34 @@ using Windows.Foundation;
 using Windows.Web.Http;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Bangumi.Client.Schema
 {
     public class Subject : WikiBase
     {
+        [JsonConstructor]
         public Subject(long id) : base(id)
         {
         }
 
-        [JsonProperty("eps")]
-        private readonly ObservableList<Episode> episodes = new ObservableList<Episode>();
-        [JsonIgnore]
-        public ObservableListView<Episode> Episodes => this.episodes.AsReadOnly();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string summary;
+        [JsonProperty("summary")]
+        public string Summary { get => this.summary; protected set => Set(ref this.summary, value); }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [JsonRequired]
+        private readonly ObservableList<Episode> eps = new ObservableList<Episode>();
+        [JsonIgnore]
+        public ObservableListView<Episode> Episodes => this.eps.AsReadOnly();
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DateTimeOffset airDate;
         [JsonProperty("air_date")]
         public DateTimeOffset AirDate { get => this.airDate; set => Set(ref this.airDate, value); }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RatingState rating;
         [JsonProperty("rating")]
         public RatingState Rating { get => this.rating; set => Set(ref this.rating, value); }
@@ -114,13 +124,10 @@ namespace Bangumi.Client.Schema
             }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int rank;
         [JsonProperty("rank")]
         public int Rank { get => this.rank; set => Set(ref this.rank, value); }
-
-        private ImageUri images;
-        [JsonProperty("images")]
-        public ImageUri Images { get => this.images; set => Set(ref this.images, value); }
 
         public readonly struct CollectionState
         {
@@ -146,14 +153,35 @@ namespace Bangumi.Client.Schema
             public int Dropped { get; }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private CollectionState collection;
         public CollectionState Collection { get => this.collection; set => Set(ref this.collection, value); }
 
-        public Character[] crt { get; set; }
-        public Person[] staff { get; set; }
-        public Topic[] topic { get; set; }
-        public Blog[] blog { get; set; }
+        [JsonRequired]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly ObservableList<Character> crt = new ObservableList<Character>();
+        [JsonIgnore]
+        public ObservableListView<Character> Characters => this.crt.AsReadOnly();
 
+        [JsonRequired]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly ObservableList<Person> staff = new ObservableList<Person>();
+        [JsonIgnore]
+        public ObservableListView<Person> Staff => this.staff.AsReadOnly();
+
+        [JsonRequired]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly ObservableList<Topic> topic = new ObservableList<Topic>();
+        [JsonIgnore]
+        public ObservableListView<Topic> Topics => this.topic.AsReadOnly();
+
+        [JsonRequired]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly ObservableList<Blog> blog = new ObservableList<Blog>();
+        [JsonIgnore]
+        public ObservableListView<Blog> Blogs => this.blog.AsReadOnly();
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SubjectType type;
         [JsonProperty("type")]
         public SubjectType Type { get => this.type; set => Set(ref this.type, value); }
