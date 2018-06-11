@@ -35,9 +35,9 @@ namespace Bangumi.Client.Schema
         public ObservableListView<Episode> Episodes => this.eps.AsReadOnly();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DateTimeOffset airDate;
+        private DateTime airDate;
         [JsonProperty("air_date")]
-        public DateTimeOffset AirDate { get => this.airDate; set => Set(ref this.airDate, value); }
+        public DateTime AirDate { get => this.airDate; set => Set(ref this.airDate, value); }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RatingState rating;

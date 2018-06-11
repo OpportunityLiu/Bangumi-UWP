@@ -26,6 +26,8 @@ namespace Bangumi.Client.Schema
                 {
                     new Internal.UriConverter(),
                     new Internal.ListUpdateConverter(),
+                    new Internal.DateTimeConverter(),
+                    new Internal.TimeSpanConverter(),
                 },
             };
 

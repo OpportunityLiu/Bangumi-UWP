@@ -3,6 +3,7 @@ using Opportunity.MvvmUniverse.Collections;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Bangumi.Client.Internal
@@ -28,9 +29,12 @@ namespace Bangumi.Client.Internal
         {
             if (d is null)
             {
-                if (data is null)
-                    return null;
                 return new ObservableList<T>(data);
+            }
+            else if (data.IsNullOrEmpty())
+            {
+                d.Clear();
+                return d;
             }
             d.Update(data, EqualityComparer<T>.Default, (o, n) =>
             {

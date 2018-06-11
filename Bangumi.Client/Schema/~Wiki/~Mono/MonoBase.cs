@@ -12,21 +12,19 @@ namespace Bangumi.Client.Schema
         protected MonoBase(long id) : base(id) { }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [JsonProperty]
         private int comment;
-        [JsonIgnore]
-        public int Comment { get => this.comment; set => Set(ref this.comment, value); }
+        [JsonProperty("comment")]
+        public int Comment { get => this.comment; private set => Set(ref this.comment, value); }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [JsonProperty]
         private int collects;
-        [JsonIgnore]
-        public int Collects { get => this.collects; set => Set(ref this.collects, value); }
+        [JsonProperty("collects")]
+        public int Collects { get => this.collects; private set => Set(ref this.collects, value); }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [JsonProperty]
-        private MonoInfo info;
+        private InfoBox info;
         [JsonIgnore]
-        public MonoInfo Info { get => this.info; set => Set(ref this.info, value); }
+        public InfoBox Info { get => this.info; set => Set(ref this.info, value); }
     }
 }
