@@ -1,4 +1,5 @@
 ﻿using Bangumi.UWP.ViewModels;
+using Opportunity.MvvmUniverse.Commands;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,6 +48,14 @@ namespace Bangumi.UWP.Views
             if (oldValue == newValue)
                 return;
             var sender = (SubjectPage)dp;
+            if (oldValue != null)
+                oldValue.Refresh.Executed -= sender.ee;
+            if (newValue != null)
+                newValue.Refresh.Executed += sender.ee;
+        }
+
+        private void ee(ICommand sender, ExecutedEventArgs e)
+        {
 
         }
 
@@ -55,7 +64,9 @@ namespace Bangumi.UWP.Views
             base.OnNavigatedTo(e);
             this.VM = SubjectVM.Get((long)e.Parameter);
             if (e.NavigationMode == NavigationMode.New || e.NavigationMode == NavigationMode.Refresh)
+            {
                 this.VM.Refresh.Execute();
+            }
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

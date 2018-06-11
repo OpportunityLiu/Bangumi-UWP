@@ -11,8 +11,6 @@ namespace Bangumi.Client.Schema
         {
         }
 
-        public string[] jobs { get; set; }
-
         public override IAsyncActionWithProgress<HttpProgress> PopulateAsync() => throw new System.NotImplementedException();
     }
 }

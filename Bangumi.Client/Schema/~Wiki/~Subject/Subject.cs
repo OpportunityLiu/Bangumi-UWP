@@ -29,7 +29,7 @@ namespace Bangumi.Client.Schema
         public string Summary { get => this.summary; protected set => Set(ref this.summary, value); }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [JsonRequired]
+        [JsonProperty]
         private readonly ObservableList<Episode> eps = new ObservableList<Episode>();
         [JsonIgnore]
         public ObservableListView<Episode> Episodes => this.eps.AsReadOnly();
@@ -157,25 +157,25 @@ namespace Bangumi.Client.Schema
         private CollectionState collection;
         public CollectionState Collection { get => this.collection; set => Set(ref this.collection, value); }
 
-        [JsonRequired]
+        [JsonProperty]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ObservableList<Character> crt = new ObservableList<Character>();
+        private readonly ObservableList<SubjectCharacter> crt = new ObservableList<SubjectCharacter>();
         [JsonIgnore]
-        public ObservableListView<Character> Characters => this.crt.AsReadOnly();
+        public ObservableListView<SubjectCharacter> Characters => this.crt.AsReadOnly();
 
-        [JsonRequired]
+        [JsonProperty]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ObservableList<Person> staff = new ObservableList<Person>();
+        private readonly ObservableList<SubjectStaff> staff = new ObservableList<SubjectStaff>();
         [JsonIgnore]
-        public ObservableListView<Person> Staff => this.staff.AsReadOnly();
+        public ObservableListView<SubjectStaff> Staff => this.staff.AsReadOnly();
 
-        [JsonRequired]
+        [JsonProperty]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ObservableList<Topic> topic = new ObservableList<Topic>();
         [JsonIgnore]
         public ObservableListView<Topic> Topics => this.topic.AsReadOnly();
 
-        [JsonRequired]
+        [JsonProperty]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ObservableList<Blog> blog = new ObservableList<Blog>();
         [JsonIgnore]

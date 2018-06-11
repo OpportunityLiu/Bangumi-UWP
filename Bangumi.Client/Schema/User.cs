@@ -14,6 +14,7 @@ using Windows.Web.Http;
 
 namespace Bangumi.Client.Schema
 {
+    [DebuggerDisplay(@"Id = {Id} Username = {Username}")]
     public sealed class User : ResponseObject
     {
         public static IAsyncOperationWithProgress<User, HttpProgress> FetchAsync(int id)
