@@ -1,2 +1,2 @@
 # Bangumi-UWP
-UWP Client for bangumi.tv
+UWP Client for bangumi.tv - WIP
