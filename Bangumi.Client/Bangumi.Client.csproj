@@ -147,7 +147,7 @@
     <Compile Include="Auth\IAuthInfo.cs" />
     <Compile Include="Auth\AuthManager.cs" />
     <Compile Include="Auth\Token.cs" />
-    <Compile Include="Schema\User.cs" />
+    <Compile Include="Schema\~User\User.cs" />
     <Compile Include="Schema\~Wiki\~Subject\Subject.cs" />
     <Compile Include="Schema\~Wiki\WikiBase.cs" />
     <EmbeddedResource Include="Properties\Bangumi.Client.rd.xml" />

@@ -1,6 +1,7 @@
 ﻿using Bangumi.Client.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Opportunity.Helpers.ObjectModel;
 using Opportunity.MvvmUniverse;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,66 @@ namespace Bangumi.Client.Schema
         private UserGroup group;
         [JsonProperty("usergroup")]
         public UserGroup Group { get => this.group; set => Set(ref this.group, value); }
+    }
+
+    [DebuggerDisplay(@"Id = {Id} Username = {Username}")]
+    public sealed class Collections : ResponseObject
+    {
+
+        [JsonConstructor]
+        public Collections(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentException("UID 应为正整数");
+            this.UserId = id;
+        }
+
+        [JsonIgnore]
+        public int UserId { get; }
+
+        public override IAsyncActionWithProgress<HttpProgress> PopulateAsync()
+        {
+            return MyHttpClient.GetJsonAsync(new Uri(Config.ApiUri, $"/user/{UserId}/collections/book?app_id={Auth.AuthManager.AuthInfo.GetAppId()}"), new[] { this });
+        }
+
+        public CollectionStatus type { get; set; }
+        public string name { get; set; }
+        public string name_cn { get; set; }
+        public Collect[] collects { get; set; }
+
+        public class Collect
+        {
+            public Status status { get; set; }
+            public int count { get; set; }
+            public List[] list { get; set; }
+        }
+
+        public class Status
+        {
+            public int id { get; set; }
+            public string type { get; set; }
+            public string name { get; set; }
+        }
+
+        public class List
+        {
+            public Subject subject { get; set; }
+        }
+    }
+
+    public enum CollectionStatus
+    {
+        Unknown = 0,
+        /// <summary>1 = wish = 想做 </summary>
+        Wish = 1,
+        /// <summary>2 = collect = 做过 </summary>
+        Collect = 2,
+        /// <summary>3 = do = 在做 </summary>
+        Do = 3,
+        /// <summary>4 = on_hold = 搁置 </summary>
+        OnHold = 4,
+        /// <summary>5 = dropped = 抛弃</summary>
+        Dropped = 5,
     }
 
     public enum UserGroup

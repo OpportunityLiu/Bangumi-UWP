@@ -36,7 +36,13 @@ namespace Bangumi.Client.Internal
                 DefaultRequestHeaders.Authorization = null;
         }
 
-        private static readonly HttpClient inner = new HttpClient();
+        private static readonly HttpClient inner = new HttpClient(new HttpBaseProtocolFilter
+        {
+            CacheControl =
+            {
+                ReadBehavior = HttpCacheReadBehavior.NoCache,
+            }
+        });
 
         public static HttpRequestHeaderCollection DefaultRequestHeaders => inner.DefaultRequestHeaders;
 

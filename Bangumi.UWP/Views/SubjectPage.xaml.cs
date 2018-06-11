@@ -1,4 +1,5 @@
-﻿using Bangumi.UWP.ViewModels;
+﻿using Bangumi.Client.Schema;
+using Bangumi.UWP.ViewModels;
 using Opportunity.MvvmUniverse.Commands;
 using System;
 using System.Collections.Generic;
@@ -54,9 +55,10 @@ namespace Bangumi.UWP.Views
                 newValue.Refresh.Executed += sender.ee;
         }
 
-        private void ee(ICommand sender, ExecutedEventArgs e)
+        private async void ee(ICommand sender, ExecutedEventArgs e)
         {
-
+            var c = new Collections(Client.Auth.AuthManager.UserId);
+            await c.PopulateAsync();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
