@@ -23,8 +23,8 @@ namespace Bangumi.Client.Schema
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [JsonProperty]
-        private InfoBox info;
+        private readonly InfoBox info = new InfoBox();
         [JsonIgnore]
-        public InfoBox Info { get => this.info; set => Set(ref this.info, value); }
+        public InfoBoxView Info => this.info.AsReadOnly();
     }
 }

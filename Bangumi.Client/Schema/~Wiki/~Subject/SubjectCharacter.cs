@@ -10,9 +10,8 @@ namespace Bangumi.Client.Schema
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [JsonProperty]
         private string role_name;
-        [JsonIgnore]
+        [JsonProperty("role_name")]
         public string Role { get => this.role_name; set => Set(ref this.role_name, value); }
     }
 }
